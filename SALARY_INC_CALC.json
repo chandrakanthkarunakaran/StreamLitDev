@@ -1,0 +1,200 @@
+{
+  "Root": "",
+  "SchemaName":"XYZ",
+  "SchemaClass": [
+    {
+      "SchemaClassName": "Salary&IncentiveCalculation",
+      "DataSource": "active_bt3",
+      "DateAggregationOn":"DocumentDate",
+      "SenderID": {
+        "VAL": [
+          "FLINTO"
+        ],
+        "equality": "IN"
+      },
+      "BusinessModel": "BOX",
+      "DocumentType": "RCPT",
+      "SettlementType": "Per ResourceID Monthly",
+      "ResourceID": "*",
+      "ResourceName": "*",
+      "LocationCode": "*",
+      "OutputProcessCode": "TT",
+      "ResourceCategory": "*",
+      "Components": [
+        {
+          "ComponentName": "Attendance",
+          "ComponentType": "COST",
+          "ComponentExpr": "COUNTDISTINCT(DocumentDate)",
+          "Criteria": [
+            {
+              "ResourceCategory": {
+                "VAL": [
+                  "SM",
+                  "TL",
+                  "DIT",
+                  "DIRECTOR"
+                ],
+                "equality": "IN"
+              },
+              "ForPrdFrom": "2022-04-01",
+              "ForPrdTo": ""
+            }
+          ]
+        },
+        {
+          "ComponentName": "BasicSalary",
+          "ModelID": "Fixed",
+          "Type": "FixedWithProRata",
+          "ComponentType": "COST",
+          "ConditionField": "Attendance",
+          "ComponentExpr": "",
+          "Criteria": [
+            {
+              "ResourceCategory": "SM",
+              "Conditions": [
+                {
+                  "ForPrdFrom": "2022-04-01",
+                  "ForPrdTo": "2022-06-30",
+                  "LowerLimit": 1,
+                  "UpperLimit": 26,
+                  "Value": 50000,
+                  "Curr": "INR",
+                  "UOM": "Per ResourceID Monthly"
+                },
+                {
+                  "ForPrdFrom": "2022-07-01",
+                  "ForPrdTo": "",
+                  "LowerLimit": 1,
+                  "UpperLimit": 26,
+                  "Value": 50000,
+                  "Curr": "INR",
+                  "UOM": "Per ResourceID Monthly"
+                }
+              ]
+            },
+            {
+              "ResourceCategory": "TL",
+              "ForPrdFrom": "2022-04-01",
+              "ForPrdTo": "",
+              "Conditions": [
+                {
+                  "LowerLimit": 1,
+                  "UpperLimit": 26,
+                  "Value": 75000,
+                  "Curr": "INR",
+                  "UOM": "Per ResourceID Monthly"
+                }
+              ]
+            },
+            {
+              "ResourceCategory": "DIT",
+              "ForPrdFrom": "2022-04-01",
+              "ForPrdTo": "",
+              "Conditions": [
+                {
+                  "LowerLimit": 1,
+                  "UpperLimit": 26,
+                  "Value": 100000,
+                  "Curr": "INR",
+                  "UOM": "Per ResourceID Monthly"
+                }
+              ]
+            },
+            {
+              "ResourceCategory": "DIRECTOR",
+              "ForPrdFrom": "2022-04-01",
+              "ForPrdTo": "",
+              "Conditions": [
+                {
+                  "LowerLimit": 1,
+                  "UpperLimit": 26,
+                  "Value": 180000,
+                  "Curr": "INR",
+                  "UOM": "Per ResourceID Monthly"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "ComponentName": "SaleValuePerc",
+          "ModelID": "FixedSlabv1",
+          "Type": "FixedWithSlab",
+          "ComponentType": "COST",
+          "ComponentExpr": "(ProductValue/1400000)*100",
+          "Criteria": [
+            {
+              "ResourceCategory": {
+                "VAL": [
+                  "SM",
+                  "TL",
+                  "DIT",
+                  "DIRECTOR"
+                ],
+                "equality": "IN"
+              },
+              "ForPrdFrom": "2022-04-01",
+              "ForPrdTo": ""
+            }
+          ]
+        },
+        {
+          "ComponentName": "Incentive",
+          "ComponentType": "COST",
+          "ConditionField": "SaleValuePerc",
+          "ComponentExpr": "SaleValuePerc*CondRate",
+          "ModelID": "FixedSlabv1",
+          "Type": "FixedWithSlab",
+          "Criteria": [
+            {
+              "ResourceCategory": "SM",
+              "ForPrdFrom": "2022-04-01",
+              "ForPrdTo": "",
+              "Conditions": [
+                {
+                  "SlabID": 1,
+                  "SlabName": "100%-120%",
+                  "LowerLimit": 100,
+                  "UpperLimit": 120,
+                  "Value": 17500,
+                  "UOM": "Per ResourceID Weekly"
+                },
+                {
+                  "SlabID": 2,
+                  "SlabName": "121%-160%",
+                  "LowerLimit": 121,
+                  "UpperLimit": 160,
+                  "Value": 35000,
+                  "UOM": "Per ResourceID Weekly"
+                },
+                {
+                  "SlabID": 3,
+                  "SlabName": "121%-160%",
+                  "LowerLimit": 121,
+                  "UpperLimit": 160,
+                  "Value": 35000,
+                  "UOM": "Per ResourceID Weekly"
+                },
+                {
+                  "SlabID": 4,
+                  "SlabName": "201%-240%",
+                  "LowerLimit": 201,
+                  "UpperLimit": 240,
+                  "Value": 84000,
+                  "UOM": "Per ResourceID Weekly"
+                },
+                {
+                  "SlabName": "241%-300%",
+                  "LowerLimit": 241,
+                  "UpperLimit": 300,
+                  "Value": 140000,
+                  "UOM": "Per ResourceID Weekly"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
